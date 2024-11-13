@@ -1,0 +1,224 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .form-title {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #00aaff;
+  }
+  
+  .form-section {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-section h2 {
+    color: #00aaff;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  label {
+    display: block;
+    margin: 0.5rem 0 0.3rem;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="date"],
+  input[type="address"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.6rem;
+    margin-bottom: 0.5rem;
+    border: none;
+    border-radius: 6px;
+    outline: none;
+    background-color: #2e2e3d;
+    color: #fff;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  input:focus,
+  select:focus,
+  textarea:focus {
+    background-color: #3e3e5b;
+  }
+  
+  .radio-group {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  textarea {
+    min-height: 110px;
+    resize: none;
+  }
+  
+  /* Submit Button */
+  .submit-button {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 8px;
+    background-color: #00aaff;
+    color: #fff;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-button:hover {
+    background-color: #007acc;
+  }
+  
+  @keyframes slideIn {
+    0% {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  body {
+    background-color: #121212;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+    overflow: hidden;
+  }
+  
+  /* Form Container */
+  .form-container {
+    background: #1e1e2e;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 900px; /* Increased max-width for larger form */
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideIn 0.8s ease;
+  }
+  
+  @media (max-height: 700px) {
+    .form-container {
+      padding: 1.5rem;
+    }
+  
+    .form-title {
+      font-size: 50px;
+    }
+  
+    .form-section h2 {
+      font-size: 1.8rem;
+    }
+  
+    .submit-button {
+      padding: 0.6rem;
+      font-size: 1rem;
+    }
+  }
+  
+  .declaration-container {
+    background: #1e1e2e;
+    color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-top: 1.5rem;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
+    animation: slideIn 0.8s ease;
+    text-align: left;
+  }
+  
+  .declaration-title {
+    font-size: 1.5rem;
+    text-align: center;
+    color: #00aaff;
+    margin-bottom: 1rem;
+  }
+  
+  .declaration-text {
+    font-size: 1rem;
+    text-align: left;
+    margin-bottom: 1.5rem;
+    color: #e0e0e0;
+  }
+  
+  .declaration-name {
+    font-weight: bold;
+    color: #00aaff;
+    text-align: left;
+  }
+  
+  .signature-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+    text-align: left;
+  }
+  
+  .signature-field {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    text-align: left;
+  }
+  
+  .signature-input {
+    padding: 0.6rem;
+    background-color: #2e2e3d;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    outline: none;
+    margin-top: 0.5rem;
+    text-align: left;
+  }
+  
+  .date-section {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+    text-align: left;
+  }
+  
+  .date-input {
+    padding: 0.6rem;
+    background-color: #2e2e3d;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    outline: none;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  
+  @keyframes slideIn {
+    0% {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  .my_head {
+    text-align: left;
+  }
