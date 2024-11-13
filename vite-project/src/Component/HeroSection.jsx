@@ -27,7 +27,7 @@ const HeroSection = () => {
         dreams and shape a brighter future.
       </p>
       <a
-        href="#learn-more"
+        href="/About"
         className="bg-blue-500 hover:bg-blue-700 text-white py-3 px-8 rounded-lg text-xl transition duration-300"
       >
         Learn More

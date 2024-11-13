@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white py-8">
+    <footer className="bg-gray-800 text-white py-8 z-1">
       <div className="container mx-auto px-6">
         {/* Footer Content */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -18,10 +18,10 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><a href="#services" className="text-sm hover:underline">Services</a></li>
-              <li><a href="#contact" className="text-sm hover:underline">Contact Us</a></li>
-              <li><a href="#about" className="text-sm hover:underline">About Us</a></li>
-              <li><a href="#privacy" className="text-sm hover:underline">Privacy Policy</a></li>
+              <li><a href="/" className="text-sm hover:underline">Services</a></li>
+              <li><a href="/Contact" className="text-sm hover:underline">Contact Us</a></li>
+              <li><a href="/About" className="text-sm hover:underline">About Us</a></li>
+              <li><a href="/" className="text-sm hover:underline">Privacy Policy</a></li>
             </ul>
           </div>
 

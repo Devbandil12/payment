@@ -1,3 +1,11 @@
+/* src/index.css or src/styles.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer base {
+    h2 {
+      margin: 0;
+    }
+  }
+  

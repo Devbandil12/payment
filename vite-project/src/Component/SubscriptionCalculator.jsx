@@ -10,7 +10,7 @@ const SubscriptionCalculator = () => {
     };
 
   return (
-    <div className="flex flex-col items-center justify-center  bg-gradient-to-br from-blue-100 to-blue-300 p-4">
+    <div className="flex flex-col items-center justify-center  p-4">
     <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg text-center">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4 animate-fadeIn">
         What is your educational cost?
