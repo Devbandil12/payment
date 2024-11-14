@@ -5,6 +5,7 @@ import Navbar from "./Component/NavBar";
 import HeroSection from "./Component/HeroSection";
 import CartComponent from "./Component/CartSection";
 import Footer from "./Footer";
+import SubscriptionSection from "./Component/Subscription";
 
 function Home() {
 
@@ -15,6 +16,7 @@ function Home() {
       <Navbar/>
       <HeroSection/>
       <CartComponent/>
+      <SubscriptionSection/>
     <SubscriptionCalculator/>
     <Footer/>
     </div>
