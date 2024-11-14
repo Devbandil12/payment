@@ -20,76 +20,57 @@ async function makeRequestWithRetry(options, retries = 3, backoff = 1000) {
 
 payment.post("/payment", async (req, res) => {
   const { name, phone, amount } = req.body;
-  
   try {
-    // Convert amount to paise (1 rupee = 100 paise)
-    const amountInPaise = amount * 100;
-
-    // Data to send in the payload
     const data = {
-      merchantId: "PGTESTPAYUAT77", // Merchant ID
-      merchantTransactionId: "MT7850590068188178", // Unique Transaction ID
-      merchantUserId: "PGTESTPAYUAT86", // Merchant User ID
+      merchantId: "PGTESTPAYUAT",
+      merchantTransactionId: "MT7850590068188178",
+      merchantUserId: "PGTESTPAYUAT86",
       name: name,
-      amount: amountInPaise, // Amount in Paise
-      redirectUrl: "https://localhost:5173/", // Redirect URL after payment
-      redirectMode: "post", // Redirect mode (can be REDIRECT or POST)
-      mobileNumber: phone, // Mobile number of the user
+      amount: amount,
+      redirectUrl: "https://localhost:3000/status",
+      redirectMode: "post",
+      mobileNumber: phone,
       paymentInstrument: {
-        type: "PAY_PAGE", // Payment type
+        type: "PAY_PAGE",
       },
     };
-    
-    // Stringify and encode the payload
+
     const payload = JSON.stringify(data);
-    const payloadBase64 = Buffer.from(payload).toString("base64");
+    const payloadMain = Buffer.from(payload).toString("base64");
+    const key = "96434309-7796-489-8924-ab569886076";
+    const keyIndex = 1;
+    const string = payload + "/pg/v1/pay/" + key;
     
-    const key = "14fa5465-f8a7-443f-8477-f986b8fcfde9"; // Provided Salt Key
-    const keyIndex = 1; // Provided Salt Index
-    
-    // Concatenate payload and key to generate checksum
-    const stringToHash = payloadBase64 + "/pg/v1/pay" + key;
-    const sha256 = crypto.createHash("sha256").update(stringToHash).digest("hex");
+    // Compute the checksum
+    const sha256 = crypto.createHash("sha256").update(string).digest("hex");
     const checksum = sha256 + "###" + keyIndex;
 
-    // Options for the API request
     const options = {
       method: "post",
-      url: "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay", // PhonePe sandbox endpoint
+      url: "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay",
       headers: {
-        accept: "application/json",
+        accept: "application/json", // Change to application/json
         "Content-Type": "application/json",
-        "X-VERIFY": checksum, // X-VERIFY header
+        "X-VERIFY": checksum,
       },
       data: {
-        request: payloadBase64, // Base64 encoded payload
+        request: payloadMain,
       },
     };
-    
-    // Debugging: Log payload and checksum
-    console.log("Payload (Base64):", payloadBase64);
-    console.log("Checksum:", checksum);
-    console.log("Request Options:", options); // Log the full options for debugging
 
     // Make the request with retry mechanism
     const response = await makeRequestWithRetry(options);
-    
-    // Debugging: Log API response
-    console.log("API Response:", response.data); // Log full API response for clarity
-    
-    // Send the URL from the response to the client
     res.send(response.data.data.instrumentResponse.redirectInfo.url);
 
   } catch (error) {
-    console.error("Error during payment processing:", error.message || error);
-
-    if (error.response) {
-      console.error("API Error Response:", error.response.data); // Log API response errors
-    }
-    
+    console.error("Error:", error.message || error);
     res.status(500).send("An error occurred while processing the payment.");
   }
 });
 
+payment.get("/status", (req, res) => {
+  console.log("checking status");
+  res.send("Status check endpoint");
+});
 
 module.exports = payment;
