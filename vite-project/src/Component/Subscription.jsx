@@ -19,7 +19,7 @@ const SubscriptionSection = () => {
       {/* Button Section */}
       <button
         onClick={() => window.location.href = '/application-form'}
-        className="bg-yellow-500 text-blue-600 hover:bg-yellow-400 px-6 py-3 rounded-lg text-xl transition duration-300"
+        className="bg-yellow-500 text-black hover:bg-yellow-400 px-6 py-3 rounded-lg text-xl transition duration-300"
       >
         Take Subscription Now
       </button>

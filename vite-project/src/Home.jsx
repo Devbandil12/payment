@@ -6,6 +6,7 @@ import HeroSection from "./Component/HeroSection";
 import CartComponent from "./Component/CartSection";
 import Footer from "./Footer";
 import SubscriptionSection from "./Component/Subscription";
+import PaymentForm from "./Component/PaymentForm";
 
 function Home() {
 
@@ -18,6 +19,7 @@ function Home() {
       <CartComponent/>
       <SubscriptionSection/>
     <SubscriptionCalculator/>
+    <PaymentForm/>
     <Footer/>
     </div>
    
