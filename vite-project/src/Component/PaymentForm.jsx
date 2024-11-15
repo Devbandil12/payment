@@ -25,7 +25,8 @@ const PaymentForm = () => {
         alert("Failed to initiate payment.");
       }
     } catch (error) {
-      console.error("Payment initiation failed:", error);
+      const { message } = error;
+      console.error("Payment initiation failed:", message);
       alert("An error occurred during payment initiation.");
     } finally {
       setLoading(false);

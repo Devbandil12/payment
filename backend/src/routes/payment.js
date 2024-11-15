@@ -1,95 +1,108 @@
-const express = require("express");
-const axios = require("axios");
-const crypto = require("crypto"); // Import crypto module
+const express = require('express');
+const axios = require('axios');
+const crypto = require('crypto');
+const cors = require("cors");
+const { v4: uuidv4 } = require('uuid');
+
+const app = express();
+
+app.use(express.json());
+app.use(cors());
 const payment = express.Router();
 
-// Helper function to implement retries with backoff
-async function makeRequestWithRetry(options, retries = 3, backoff = 1000) {
-  try {
-    const response = await axios.request(options);
-    return response;
-  } catch (error) {
-    if (error.response && error.response.status === 429 && retries > 0) {
-      console.log(`Retrying... attempts left: ${retries}`);
-      await new Promise((resolve) => setTimeout(resolve, backoff));
-      return makeRequestWithRetry(options, retries - 1, backoff * 2); // Increase backoff
+const MERCHANT_KEY="96434309-7796-489d-8924-ab56988a6076"
+const MERCHANT_ID="PGTESTPAYUAT86"
+
+// const prod_URL = "https://api.phonepe.com/apis/hermes/pg/v1/pay"
+// const prod_URL = "https://api.phonepe.com/apis/hermes/pg/v1/status"
+
+const MERCHANT_BASE_URL="https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay"
+const MERCHANT_STATUS_URL="https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/status"
+
+const redirectUrl="http://localhost:8000/status"
+
+const successUrl="http://localhost:5173/payment-success"
+const failureUrl="http://localhost:5173/payment-failure"
+
+
+payment.post('/payment', async (req, res) => {
+
+    const {name, mobileNumber, amount} = req.body;
+    const orderId = uuidv4()
+
+    //payment
+    const paymentPayload = {
+        merchantId : MERCHANT_ID,
+        merchantUserId: name,
+        mobileNumber: mobileNumber,
+        amount : amount * 100,
+        merchantTransactionId: orderId,
+        redirectUrl: `${redirectUrl}/?id=${orderId}`,
+        redirectMode: 'POST',
+        paymentInstrument: {
+            type: 'PAY_PAGE'
+        }
     }
-    throw error;
-  }
-}
 
-payment.post("/payment", async (req, res) => {
-  const { name, phone, amount } = req.body;
-  
-  try {
-    // Convert amount to paise (1 rupee = 100 paise)
-    const amountInPaise = amount * 100;
+    const payload = Buffer.from(JSON.stringify(paymentPayload)).toString('base64')
+    const keyIndex = 1
+    const string  = payload + '/pg/v1/pay' + MERCHANT_KEY
+    const sha256 = crypto.createHash('sha256').update(string).digest('hex')
+    const checksum = sha256 + '###' + keyIndex
 
-    // Data to send in the payload
-    const data = {
-      merchantId: "PGTESTPAYUAT77", // Merchant ID
-      merchantTransactionId: "MT7850590068188178", // Unique Transaction ID
-      merchantUserId: "PGTESTPAYUAT86", // Merchant User ID
-      name: name,
-      amount: amountInPaise, // Amount in Paise
-      redirectUrl: "https://localhost:5173/", // Redirect URL after payment
-      redirectMode: "post", // Redirect mode (can be REDIRECT or POST)
-      mobileNumber: phone, // Mobile number of the user
-      paymentInstrument: {
-        type: "PAY_PAGE", // Payment type
-      },
-    };
-    
-    // Stringify and encode the payload
-    const payload = JSON.stringify(data);
-    const payloadBase64 = Buffer.from(payload).toString("base64");
-    
-    const key = "14fa5465-f8a7-443f-8477-f986b8fcfde9"; // Provided Salt Key
-    const keyIndex = 1; // Provided Salt Index
-    
-    // Concatenate payload and key to generate checksum
-    const stringToHash = payloadBase64 + "/pg/v1/pay" + key;
-    const sha256 = crypto.createHash("sha256").update(stringToHash).digest("hex");
-    const checksum = sha256 + "###" + keyIndex;
-
-    // Options for the API request
-    const options = {
-      method: "post",
-      url: "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay", // PhonePe sandbox endpoint
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-        "X-VERIFY": checksum, // X-VERIFY header
-      },
-      data: {
-        request: payloadBase64, // Base64 encoded payload
-      },
-    };
-    
-    // Debugging: Log payload and checksum
-    console.log("Payload (Base64):", payloadBase64);
-    console.log("Checksum:", checksum);
-    console.log("Request Options:", options); // Log the full options for debugging
-
-    // Make the request with retry mechanism
-    const response = await makeRequestWithRetry(options);
-    
-    // Debugging: Log API response
-    console.log("API Response:", response.data); // Log full API response for clarity
-    
-    // Send the URL from the response to the client
-    res.send(response.data.data.instrumentResponse.redirectInfo.url);
-
-  } catch (error) {
-    console.error("Error during payment processing:", error.message || error);
-
-    if (error.response) {
-      console.error("API Error Response:", error.response.data); // Log API response errors
+    const option = {
+        method: 'POST',
+        url:MERCHANT_BASE_URL,
+        headers: {
+            accept : 'application/json',
+            'Content-Type': 'application/json',
+            'X-VERIFY': checksum
+        },
+        data :{
+            request : payload
+        }
     }
-    
-    res.status(500).send("An error occurred while processing the payment.");
-  }
+    try {
+        
+        const response = await axios.request(option);
+        console.log(response.data.data.instrumentResponse.redirectInfo.url)
+         res.send(response.data.data.instrumentResponse.redirectInfo.url)
+    } catch (error) {
+        console.log("error in payment", error)
+        res.status(500).json({error : 'Failed to initiate payment'})
+    }
+
 });
 
 
-module.exports = payment;
+payment.post('/status/:id', async (req, res) => {
+    const merchantTransactionId = req.params.id;
+    console.log(merchantTransactionId)
+
+    const keyIndex = 1
+    const string  = `/pg/v1/status/${MERCHANT_ID}/${merchantTransactionId}` + MERCHANT_KEY
+    const sha256 = crypto.createHash('sha256').update(string).digest('hex')
+    const checksum = sha256 + '###' + keyIndex
+
+    const option = {
+        method: 'GET',
+        url:`${MERCHANT_STATUS_URL}/${MERCHANT_ID}/${merchantTransactionId}`,
+        headers: {
+            accept : 'application/json',
+            'Content-Type': 'application/json',
+            'X-VERIFY': checksum,
+            'X-MERCHANT-ID': MERCHANT_ID
+        },
+    }
+
+    axios.request(option).then((response) => {
+        if (response.data.success === true){
+          console.log(successUrl)
+            return res.redirect(successUrl)
+        }else{
+            return res.redirect(failureUrl)
+        }
+    })
+});
+
+module.exports=payment
