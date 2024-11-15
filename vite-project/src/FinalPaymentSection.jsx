@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // Make sure axios is imported
 
 const FinalPaymentSection = () => {
   const user = {
@@ -13,12 +14,40 @@ const FinalPaymentSection = () => {
   const [selectedCoupon, setSelectedCoupon] = useState('');
   const [discountedAmount, setDiscountedAmount] = useState(null);
   const [couponMessage, setCouponMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const coupons = [
     { code: 'WELCOME20', discount: 20 },
     { code: 'FIRST20', discount: 20 },
     { code: 'NEW20', discount: 20 },
   ];
+
+  // This function handles the form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true); // Set loading to true to show the loading state
+
+    try {
+      const response = await axios.post("http://localhost:3000/payment", {
+        name: user.name,
+        mobileNumber: user.mobile,
+        amount: discountedAmount || amount, // Use discountedAmount if available, otherwise use the base amount
+      });
+
+      // If backend returns a redirect URL, redirect the user to the payment page
+      if (response.data) {
+        window.location.href = response.data;
+      } else {
+        alert("Failed to initiate payment.");
+      }
+    } catch (error) {
+      const { message } = error;
+      console.error("Payment initiation failed:", message);
+      alert("An error occurred during payment initiation.");
+    } finally {
+      setLoading(false); // Reset loading state after the request is complete
+    }
+  };
 
   useEffect(() => {
     if (educationalCost) {
@@ -51,11 +80,6 @@ const FinalPaymentSection = () => {
     } else {
       setCouponMessage('Please select a coupon.');
     }
-  };
-
-  const handlePayment = () => {
-    alert(`Payment Successful! You paid ₹${discountedAmount || amount}`);
-    // Add actual payment logic here
   };
 
   return (
@@ -150,10 +174,16 @@ const FinalPaymentSection = () => {
         {/* Final Payment Button */}
         <div className="text-center">
           <button
-            onClick={handlePayment}
-            className="w-full bg-green-500 text-white py-3 rounded-md hover:bg-green-700 transition duration-300"
+            type="submit"
+            disabled={loading}
+            onClick={handleSubmit}
+            className={`w-full py-2 text-lg font-semibold rounded-md ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 text-white"
+            } transition duration-300 ease-in-out`}
           >
-            Proceed to Payment
+            {loading ? "Processing..." : "Pay Now"}
           </button>
         </div>
       </div>
