@@ -4,7 +4,20 @@ module.exports = {
     './src/**/*.{js,jsx,ts,tsx}', // Include your JS/JSX/TS/TSX files
   ],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        pendulum: 'pendulum 2s ease-in-out infinite',
+      },
+      keyframes: {
+        pendulum: {
+          '0%': { transform: 'rotate(0deg)' },
+          '25%': { transform: 'rotate(20deg)' },
+          '50%': { transform: 'rotate(0deg)' },
+          '75%': { transform: 'rotate(-20deg)' },
+          '100%': { transform: 'rotate(0deg)' },
+        },
+      },
+    },
   },
   plugins: [],
-}
+};

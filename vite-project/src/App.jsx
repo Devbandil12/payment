@@ -5,6 +5,8 @@ import Home from "./Home";
 import ApplicationForm from "./NavItem/Application";
 import ContactUs from "./NavItem/Contact";
 import AboutUs from "./NavItem/Aboutus";
+import SubscriptionPlans from "./NavItem/Upgrade";
+import FinalPaymentSection from "./FinalPaymentSection";
 
 
 
@@ -19,6 +21,8 @@ function App() {
           <Route path="/application-form" element={<ApplicationForm/>} /> {/* Application form route */}
           <Route path="/Contact" element={<ContactUs/>} /> {/* Application form route */}
           <Route path="/About" element={<AboutUs/>} /> {/* Application form route */}
+          <Route path="/Subscription" element={<SubscriptionPlans/>} /> {/* Application form route */}
+          <Route path="/FinalPayment" element={<FinalPaymentSection/>} /> {/* Application form route */}
         </Routes>
       </div>
     </Router>

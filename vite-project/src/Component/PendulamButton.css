@@ -1,0 +1,5 @@
+/* Tailwind will inject the styles here when you build */
+.pendulum-button {
+    @apply animate-pendulum; /* Tailwind utility to apply the pendulum animation */
+  }
+  
