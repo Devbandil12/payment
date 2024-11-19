@@ -10,6 +10,7 @@ import FinalPaymentSection from "./FinalPaymentSection";
 
 import LoginSignup from "./Component/LoginRegisterPage";
 import RegistrationPage from "./Component/LoginRegisterPage";
+import CourseCertificationPage from "./Component/IndustrialCourses";
 
 
 
@@ -29,6 +30,7 @@ function App() {
           <Route path="/Subscription" element={<SubscriptionPlans/>} /> {/* Application form route */}
           <Route path="/FinalPayment" element={<FinalPaymentSection/>} /> {/* Application form route */}
           <Route path="/LoginPage" element={<RegistrationPage/>} />
+        <Route path="/Certification" element={<CourseCertificationPage/>} />
         </Routes>
       </div>
     </Router>
